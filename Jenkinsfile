@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PYTHON_VERSION = '3.9'        // Specify the Python version
+        PYTHON_VERSION = '3.12.3'        // Specify the Python version
         SONAR_SERVER = 'sonarserver' // SonarQube server name
         SONAR_TOKEN = 'sonartoken'   // SonarQube token
         SONAR_SCANNER = 'sonar6'     // SonarQube scanner tool name
@@ -47,13 +47,11 @@ pipeline {
             steps {
               withSonarQubeEnv('sonarserver') {
                 sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=python1 \
-                   -Dsonar.projectName=python1 \
-                   -Dsonar.projectVersion=1.0 \
-                   -Dsonar.sources=src/ \
-                   -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
-                   -Dsonar.junit.reportsPath=target/surefire-reports/ \
-                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+                -Dsonar.projectName=python1 \
+                -Dsonar.projectVersion=1.0 \
+                -Dsonar.sources=src/ \
+                -Dsonar.python.coverage.reportPaths=coverage.xml
+                -Dsonar.python.pylint.reportPaths=pylint-report.txt'''
               }
             }
         }
