@@ -27,7 +27,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh './venv/bin/python -m unittest discover' // Discover and run unit tests
+               sh './venv/bin/python -m unittest discover -s tests -p "test_*.py"'
             }
         }
 
