@@ -3,6 +3,9 @@ pipeline {
 
     environment {
         PYTHON_VERSION = '3.9' // Specify the Python version
+        SONAR_SERVER = 'sonarserver'  // SonarQube server name
+        SONAR_TOKEN = 'sonartoken'   // SonarQube server token
+        SONAR_SCANNER = 'sonar6'     // SonarQube scanner tool name
     }
 
     stages {
@@ -36,6 +39,17 @@ pipeline {
                 echo 'Packaging is optional for Python projects'
             }
         }
+        stage('SonarQube Scan') {
+            steps {
+                withSonarQubeEnv('sonarserver') {
+                    sh """
+                        ${tool('sonar6')}/bin/sonar-scanner \
+                        -Dsonar.projectKey=my-python-project \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
+                        -Dsonar.login=${env.SONAR_TOKEN}
+                    """
+                }
     }
 
     post {
