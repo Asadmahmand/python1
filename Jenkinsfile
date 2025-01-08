@@ -6,6 +6,7 @@ pipeline {
         SONAR_SERVER = 'sonarserver'  // SonarQube server name
         SONAR_TOKEN = 'sonartoken'   // SonarQube server token
         SONAR_SCANNER = 'sonar6'     // SonarQube scanner tool name
+        SONAR_HOST_URL = 'http://172.31.21.227'
     }
 
     stages {
@@ -50,6 +51,7 @@ pipeline {
                         -Dsonar.login=${env.SONAR_TOKEN}
                     """
                 }
+            }
     }
 
     post {
