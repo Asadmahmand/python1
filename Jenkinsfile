@@ -2,11 +2,10 @@ pipeline {
     agent any
 
     environment {
-        PYTHON_VERSION = '3.9' // Specify the Python version
-        SONAR_SERVER = 'sonarserver'  // SonarQube server name
-        SONAR_TOKEN = 'sonartoken'   // SonarQube server token
+        PYTHON_VERSION = '3.9'        // Specify the Python version
+        SONAR_SERVER = 'sonarserver' // SonarQube server name
+        SONAR_TOKEN = 'sonartoken'   // SonarQube token
         SONAR_SCANNER = 'sonar6'     // SonarQube scanner tool name
-        SONAR_HOST_URL = 'http://172.31.21.227'
     }
 
     stages {
@@ -18,7 +17,7 @@ pipeline {
 
         stage('Set Up Python Environment') {
             steps {
-                sh 'python3 -m venv venv' // Create a virtual environment
+                sh "python${PYTHON_VERSION} -m venv venv" // Create a virtual environment
                 sh './venv/bin/pip install --upgrade pip' // Upgrade pip
             }
         }
@@ -31,7 +30,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-               sh './venv/bin/python -m unittest discover -s tests -p "test_*.py"'
+                sh './venv/bin/python -m unittest discover -s tests -p "test_*.py"' // Run tests
             }
         }
 
@@ -40,6 +39,7 @@ pipeline {
                 echo 'Packaging is optional for Python projects'
             }
         }
+
         stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv('sonarserver') {
@@ -47,11 +47,11 @@ pipeline {
                         ${tool('sonar6')}/bin/sonar-scanner \
                         -Dsonar.projectKey=my-python-project \
                         -Dsonar.sources=. \
-                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
                         -Dsonar.login=${env.SONAR_TOKEN}
                     """
                 }
             }
+        }
     }
 
     post {
