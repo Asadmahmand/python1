@@ -23,3 +23,34 @@ pipeline {
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                sh './venv/bin/pip install -r requirements.txt' // Install dependencies
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh './venv/bin/python -m unittest discover' // Discover and run unit tests
+            }
+        }
+
+        stage('Package Application') {
+            steps {
+                echo 'Packaging is optional for Python projects'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed. Please check the logs.'
+        }
+    }
+}
