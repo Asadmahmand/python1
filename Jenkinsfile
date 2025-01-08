@@ -40,18 +40,24 @@ pipeline {
             }
         }
 
-        stage('SonarQube Scan') {
+    stage("Sonar Code Analysis") {
+        	environment {
+                scannerHome = tool 'sonar6'
+            }
             steps {
-                withSonarQubeEnv('sonarserver') {
-                    sh """
-                        ${tool('sonar6')}/bin/sonar-scanner \
-                        -Dsonar.projectKey=my-python-project \
-                        -Dsonar.sources=. \
-                        -Dsonar.login=${env.SONAR_TOKEN}
-                    """
-                }
+              withSonarQubeEnv('sonarserver') {
+                sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=python1 \
+                   -Dsonar.projectName=python1 \
+                   -Dsonar.projectVersion=1.0 \
+                   -Dsonar.sources=src/ \
+                   -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ \
+                   -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+              }
             }
         }
+
     }
 
     post {
